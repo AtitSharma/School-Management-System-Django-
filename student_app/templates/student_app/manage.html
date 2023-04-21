@@ -1,7 +1,9 @@
 hello this is manage
 
 <br>
-add {{ title }} <a href="#">Add</a>
+{% if title == "student" %}
+add {{ title }} <a href="{% url 'student:add_stundent' %}">Add</a>
+{% endif %}
 <br>
 {% for i in courses %}
     {{i}} <a href="#">Manage</a>

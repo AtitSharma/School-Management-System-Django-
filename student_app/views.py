@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,reverse
-from student_app.forms import UserRegistationForm
+from student_app.forms import UserRegistationForm,StudentCreationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
@@ -85,6 +85,18 @@ def register(request):
         return redirect("student:home")
     context={"form":form}
     return render(request,"student_app/register.html",context)
+
+
+def add_student(request):
+    if request.method=="POST":
+        form=StudentCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("student:manage",title="student")
+    else:
+        form=StudentCreationForm()
+    return render(request,"student_app/add_student.html",{"form":form})
+
 
 
 
