@@ -16,6 +16,8 @@ class BaseModel(models.Model):
     class Meta:
         abstract=True
 
+    
+
 class Student(BaseModel):
     due_fees = models.IntegerField(blank=True, null=True, default=0)
     def __str__(self):
@@ -26,13 +28,15 @@ class Subject(BaseModel):
 
     def __str__(self):
         return self.name
+    
+
 
 class Teacher(BaseModel):
     due_salary = models.IntegerField(blank=True, null=True, default=0)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 
@@ -63,8 +67,9 @@ class School(BaseModel):
 
 
 class Post(models.Model):
+    title=models.CharField(max_length=250,blank=True,null=True)
     description=models.TextField()
     user=models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.description
+        return self.title

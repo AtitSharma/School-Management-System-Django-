@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <button type="submit">Save</button>
+</form>
+
+<br>
+{% if semester %}
+    The student is currently reading in 
+    {% for sem in semester %}
+        {{sem}} <a href="#">Manage_Semester</a>
+    {% endfor %}
+{% endif %}
+<a href="{% url 'student:delete_student' pk=pk %}"> Resticate  particular student</a>
+
+{% endblock content %}

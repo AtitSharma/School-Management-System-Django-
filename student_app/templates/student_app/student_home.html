@@ -1,1 +1,12 @@
-This is Student Homepage
+{% extends "base.html" %}
+{% block content %}
+{% if posts %}
+    Here are some notices from admin
+        {% for post in posts %}
+        {{post.description}},{{post.title}},{{post.user}}
+        {% endfor %}
+{% endif %}
+
+
+
+{% endblock content %}

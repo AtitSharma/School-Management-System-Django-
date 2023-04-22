@@ -1,37 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
 hello this is manage
 
 <br>
 {% if title == "student" %}
 add {{ title }} <a href="{% url 'student:add_stundent' %}">Add</a>
+{% elif title == "teacher" %}
+add {{ title }} <a href="{% url 'student:add_teacher' %}">Add</a>
+{% elif title == "course" %}
+add {{ title }} <a href="{% url 'student:add_course' %}">Add</a>
+{% elif title == "semister" %}
+add {{ title }} <a href="{% url 'student:add_semister' %}">Add</a>
+{% elif title == "subject" %}
+add {{ title }} <a href="{% url 'student:add_subject' %}">Add</a>
 {% endif %}
 <br>
 {% for i in courses %}
-    {{i}} <a href="#">Manage</a>
+    {{i}} <a href="{% url 'student:edit_course' i.id %}">Manage</a>
     <br>
 {% endfor %}
 <br>
 {% for i in students %}
-    {{i}} <a href="#">Manage</a>
+    {{i}} <a href="{% url 'student:edit_student' i.id %}">Manage</a>
     <br>
 {% endfor %}
 <br>
 {% for i in teachers %}
-    {{i}} <a href="#">Manage</a>
+    {{i}} <a href="{% url 'student:edit_teacher' i.id %}">Manage</a>
     <br>
 {% endfor %}
 <br>
 {% for i in semisters%}
-    {{i}} <a href="#">Manage</a>
+    {{i}} <a href="{% url 'student:edit_semister' i.id %}">Manage</a>
     <br>
 {% endfor %}
 <br>
-{% for i in schools %}
-    {{i}} <a href="#">Manage</a>
-    <br>
-{% endfor %}
-<br>
+
 {% for i in subjects %}
-    {{i}} <a href="#">Manage</a>
+    {{i}} <a href="{% url 'student:edit_subject' i.id %}">Manage</a>
     <br>
 {% endfor %}
 <br>
+
+
+{% endblock content %}

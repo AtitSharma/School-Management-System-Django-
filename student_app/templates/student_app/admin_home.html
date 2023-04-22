@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 This is Admin homepage
 <br>
 <a href="{% url 'student:manage' title='course' %}">Manage Courses </a>
@@ -10,5 +13,6 @@ This is Admin homepage
 <br>
 <a href="{% url 'student:manage' title='semister' %}" >Manage Semister</a>
 <br>
-<a href="{% url 'student:manage' title='school' %}" >Manage School</a>
+<a href="{% url 'student:create_post' %}" >Provide notice to all student </a>
 <br>
+{% endblock content %}

@@ -1,15 +1,23 @@
-Hello Guys
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/w3css/3/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
-<a href="{% url 'student:register' %}"> Register </a>
+<body>
+
+<img class="d-block w-40" src="{% static 'pictures/download1.png' %}"
 
 
 
-Do you want to do Student Login 
-then 
-<br>
-<a href ="{% url 'student:student_login' %}"> Student Login </a>
-<br>
-Do you want to do Admin Login 
-then
-<br>
-<a href="{% url 'student:login' %}"> Admin Login </a>
+<section class="w3-container w3-center w3-content" style="max-width:600px">
+  <h2 class="w3-wide">ABC shool</h2>
+  <p class="w3-opacity"><i>We love teaching</i></p>
+  <p class="w3-justify">ABC is a good school</p>
+</section>
+
+{% endblock content %} 
