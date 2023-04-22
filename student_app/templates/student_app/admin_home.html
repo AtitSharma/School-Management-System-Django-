@@ -15,4 +15,45 @@ This is Admin homepage
 <br>
 <a href="{% url 'student:create_post' %}" >Provide notice to all student </a>
 <br>
+
+{% if posts %}
+    <p class="text-decoration-none text-danger mt-5">Here are some notices from admin</p>
+            {% for post in posts %}
+            <div class ="card shadow">
+                <div class="card-body">
+                    <p>
+                        Admin source :{{post.user}}
+
+                    </p>
+                    <p>
+                        On the topic :{{post.title}}
+                        
+                    </p>
+                    <p>
+                        {{post.description}}
+                        
+                    </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="float-end">
+                            <a class="text-decoration-none" href="{% url 'student:edit_post' post.id %}">Manage</a>
+                            <a class="text-decoration-none text-danger" href="#"  data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</a>
+                        </div>
+                    </div>
+                        
+                        
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+{% endif %}
+
+
+
+</div>
+
+
+
 {% endblock content %}

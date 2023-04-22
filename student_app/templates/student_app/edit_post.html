@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a class="text-decoration-none text-danger" href="{% url 'student:delete_post' pk=pk %}"> Delete Post </a>
+
+
+
+{% endblock content %}

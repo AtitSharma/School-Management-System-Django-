@@ -34,10 +34,13 @@ def admin_home(request):
     courses=Course.objects.all()
     teacher=Teacher.objects.all()
     student=Student.objects.all()
+    posts=Post.objects.all()
     context={
         "courses":courses,
         "teachers":teacher,
-        "students":student
+        "students":student,
+        "posts":posts,
+
         }
     return render(request,"student_app/admin_home.html",context)
 
@@ -114,6 +117,7 @@ def add_student(request):
 def add_teacher(request):
     if request.method=="POST":
         form=TeacherCreationForm(request.POST)
+        
         if form.is_valid():
             form.save()
             return redirect("student:manage",title="teacher")
@@ -281,12 +285,34 @@ def create_post(request):
         form=PostCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("student:student_home")
+            return redirect("student:admin_home")
     else:
         form=PostCreationForm()
     return render(request,"student_app/add_post.html",{"form":form})
 
 
+class EditPost(LoginRequiredMixin,UpdateView):
+    model=Post
+    template_name="student_app/edit_post.html"
+    fields=["title","description"]
+    success_url=reverse_lazy("student:admin_home")
+
+
+    def get_object(self):
+        pk=self.kwargs.get("pk")
+        return Post.objects.get(pk=pk)
+    
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        pk=self.kwargs.get("pk")
+        context["pk"]=pk
+        return context
+
+class DeletePost(LoginRequiredMixin,DeleteView):
+    model=Post
+    template_name="student_app/delete_post.html"
+    def get_success_url(self):
+        return reverse("student:admin_home")
 
 
 

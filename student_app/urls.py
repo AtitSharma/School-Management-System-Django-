@@ -6,7 +6,7 @@ from student_app.views import (home,Login,
                                ,manage,add_student,
                                add_teacher,
                                add_course,add_subject,add_semister
-                               ,EditCourse,create_post,
+                               ,EditCourse,create_post,EditPost,DeletePost,
                                EditStudent,EditSemister,
                                DeleteStudent,EditTeacher,DeleteTeacher
                                ,EditSubject,DeleteSemister,DeleteCourse,DeleteSubject
@@ -38,6 +38,9 @@ urlpatterns = [
     path("delete-teacher/<int:pk>",DeleteTeacher.as_view(),name="delete_teacher"),
     path("delete-course/<int:pk>",DeleteCourse.as_view(),name="delete_course"),
     path("create-post/",create_post,name="create_post"),
+    path("edit-post/<int:pk>",EditPost.as_view(),name="edit_post"),
+    path("delete-post/<int:pk>",DeletePost.as_view(),name="delete_post"),
+
 
 
 ]
