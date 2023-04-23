@@ -4,11 +4,8 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save</button>
+    <button type="submit">Send</button>
 </form>
 <br>
-<a href="{% url 'student:delete_post' pk=pk %}" class="btn btn-danger"> Delete Post </a>
-
-
 
 {% endblock content %}

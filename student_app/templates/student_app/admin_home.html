@@ -37,7 +37,7 @@ This is Admin homepage
                     <div class="card-footer">
                         <div class="float-end">
                             <a class="text-decoration-none" href="{% url 'student:edit_post' post.id %}">Manage</a>
-                            <a class="text-decoration-none text-danger" href="#"  data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</a>
+                            <a class="text-decoration-none text-danger" href="{% url 'student:delete_post' post.id %}">Delete</a>
                         </div>
                     </div>
                         

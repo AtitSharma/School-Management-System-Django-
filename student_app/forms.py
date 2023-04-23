@@ -1,9 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from student_app.models import (User
                                 ,Student,Teacher
                                 ,Semister,Subject
-                                ,Course,Post)
+                                ,Course,Post,AdmissionMessage,Message,Admin)
 
 class UserRegistationForm(UserCreationForm):
     class Meta:
@@ -43,6 +43,44 @@ class PostCreationForm(forms.ModelForm):
         fields=["title","description","user"]
 
 
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model=Message
+        fields=["title","description"]
 
+
+class AdmissionForm(forms.ModelForm):
+    class Meta:
+        model=AdmissionMessage
+        fields=["name","course","contact_number"]
+
+class StudentProfileManagementForm(forms.ModelForm):
+    class Meta:
+        model=Student
+        fields=["name","description"]
+
+
+
+
+class StudentRegistationForm(UserCreationForm):
+    class Meta:
+        model=Student
+        fields=["username","password1","password2"]
+
+class AdminRegistationForm(UserCreationForm):
+    class Meta:
+        model=Admin
+        fields=["username","password1","password2"]
+
+
+class StudentLoginForm(AuthenticationForm):
+    class Meta:
+        model=Student
+        fields=["username","password1","password2"]
+
+class AdminLoginForm(AuthenticationForm):
+    class Meta:
+        model=Admin
+        fields=["username","password1","password2"]
 
 

@@ -9,6 +9,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 
 <body>
+{% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+  {% endfor %}
+{% endif %}
 
 <img class="d-block w-40" src="{% static 'pictures/download1.png' %}"
 

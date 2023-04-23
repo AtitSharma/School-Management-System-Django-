@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+    This is contact page of Our school ABC.
+    <a href="{% url 'student:contact_admission'%}">Contact for admission </a>
+    <br>
+    <a href="{% url 'student:contact_message'%}"> Contact for Complaint </a>
+
+
+{% endblock content %}

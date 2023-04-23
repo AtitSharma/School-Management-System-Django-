@@ -1,29 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">
-                    JOIN TODAY
-                </legend>
-                {{ form.as_p}}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">
-                    Sign Up
-                </button>
-
-            </div>
-
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Already have an Account ? <a class="ml-3" href="{% url 'student:login' %}"> Sign In</a>
-            </small>
-        </div>
-
-    </div>
+Which register do yo want to keep
+<a href="{% url 'student:student_register' %}" > Student register </a>
+<br>
+<a href="{% url 'student:admin_register' %}" > Admin register </a>
 
 
 {% endblock content %}
