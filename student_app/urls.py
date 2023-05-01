@@ -1,9 +1,9 @@
 
-from django.urls import path
-from student_app.views import (home,Login,
-                               register,student_home,admin_login,
-                               admin_home,student_login
-                               ,manage,add_student,student_register,admin_register,
+from django.urls import path,include
+from student_app.views import (home,
+                               register,student_home,
+                               admin_home,view_admission,view_complaints
+                               ,manage,add_student,Login,
                                add_teacher,contact,contact_for_admission,contact_for_message,
                                add_course,add_subject,add_semister,user_logout
                                ,EditCourse,create_post,EditPost,DeletePost,
@@ -11,6 +11,9 @@ from student_app.views import (home,Login,
                                DeleteStudent,EditTeacher,DeleteTeacher
                                ,EditSubject,DeleteSemister,DeleteCourse,DeleteSubject
                                )
+
+
+
 
 app_name="student"
 
@@ -25,8 +28,7 @@ urlpatterns = [
     path("register/",register,name="register"),
     path("student-home/",student_home,name="student_home"),
     path("admin-home/",admin_home,name="admin_home"),
-    path("student-login/",student_login,name="student_login"),
-    path("admin-login/",admin_login,name="admin_login"),
+    path("student-login/",Login.as_view(),name="student_login"),
     path("manage/<str:title>/",manage,name="manage"),
     path("add-student/",add_student,name="add_stundent"),
     path("add-teacher/",add_teacher,name="add_teacher"),
@@ -47,8 +49,9 @@ urlpatterns = [
     path("edit-post/<int:pk>",EditPost.as_view(),name="edit_post"),
     path("delete-post/<int:pk>",DeletePost.as_view(),name="delete_post"),
     path("edit-profile/<int:pk>",ProfileUpdateStudent.as_view(),name="profile_update"),
-    path("register-student/",student_register,name="student_register"),
-    path("register-admin/",admin_register,name="admin_register"),
+    path("view-admission/",view_admission,name="view_admission"),
+    path("view-complaints/",view_complaints,name="view_complaints"),
+
 
 
 

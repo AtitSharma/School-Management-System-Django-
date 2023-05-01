@@ -3,6 +3,14 @@
 
 This is Admin homepage
 <br>
+{% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+  {% endfor %}
+{% endif %}
+<br>
 <a href="{% url 'student:manage' title='course' %}">Manage Courses </a>
 <br>
 <a href="{% url 'student:manage' title='student' %}">Manage Students </a>
@@ -15,9 +23,142 @@ This is Admin homepage
 <br>
 <a href="{% url 'student:create_post' %}" >Provide notice to all student </a>
 <br>
+<a href="{% url 'student:view_complaints' %}" >Complaints </a>
+<br>
+<a href="{% url 'student:view_admission' %}" >Admission Notice </a>
+<br>
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        Manage Courses
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+      {% if courses %}
+      {% for course in courses%}
+         <a href="#">{{course}} </a>
+        <br>
+      {% endfor %}
+      {% endif %}
+      
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        Manage Students
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+      {% if students %}
+      {% for student in students %}
+         <a href="#">{{student}} </a>
+        <br>
+      {% endfor %}
+      {% endif %}
+      
+      
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        Manage Teachers
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+    {% if teachers %}
+      {% for teacher in teachers %}
+         <a href="#">{{teacher}} </a>
+        <br>
+      {% endfor %}
+      {% endif %}  
+
+      
+      
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+        Manage Subjects
+      </button>
+    </h2>
+    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+    {% if subjects %}
+      {% for subject in subjects %}
+         <a href="#">{{subject}} </a>
+        <br>
+      {% endfor %}
+      {% endif %}
+      
+      
+      
+      
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+        Manage Semester
+      </button>
+    </h2>
+    <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">      
+      {% if semisters %}
+      {% for sem in semisters %}
+         <a href="#">{{sem}} </a>
+        <br>
+      {% endfor %}
+      {% endif %}</div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+        Provide Notice to All Students
+      </button>
+    </h2>
+    <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for providing notice to all students.</div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+        Complaints
+    </button>
+    </h2>
+    <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for managing semesters.</div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+        Admission Notices
+    </button>
+    </h2>
+    <div id="flush-collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Placeholder content for managing semesters.</div>
+    </div>
+  </div>
+
+
 
 {% if posts %}
-    <p class="text-decoration-none text-danger mt-5">Here are some notices from admin</p>
+    <p class="text-decoration-nTwo text-danger mt-5">Here are some notices from admin</p>
             {% for post in posts %}
             <div class ="card shadow">
                 <div class="card-body">
@@ -36,8 +177,8 @@ This is Admin homepage
                     </div>
                     <div class="card-footer">
                         <div class="float-end">
-                            <a class="text-decoration-none" href="{% url 'student:edit_post' post.id %}">Manage</a>
-                            <a class="text-decoration-none text-danger" href="{% url 'student:delete_post' post.id %}">Delete</a>
+                            <a class="text-decoration-nTwo" href="{% url 'student:edit_post' post.id %}">Manage</a>
+                            <a class="text-decoration-nTwo text-danger" href="{% url 'student:delete_post' post.id %}">Delete</a>
                         </div>
                     </div>
                         
@@ -53,6 +194,7 @@ This is Admin homepage
 
 
 </div>
+
 
 
 

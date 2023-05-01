@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'api_management',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +79,12 @@ WSGI_APPLICATION = 'student_home.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'management',
+        'USER': 'student',
+        'PASSWORD': 'mypassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -126,10 +133,11 @@ STATICFILES_DIRS=[
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+AUTHENTICATION_BACKENDS = [    'django.contrib.auth.backends.ModelBackend',]
 # LOGIN_URL="quiz:login"
 # LOGIN_REDIRECT_URL="quiz:home"
 AUTH_USER_MODEL = "student_app.User"
 
-LOGIN_URL="student:login"
-LOGIN_REDIRECT_URL="student:admin_home"
+
+LOGIN_REDIRECT_URL="student:student_home"
+LOGIN_URL= "student:student_login" 

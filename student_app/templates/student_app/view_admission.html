@@ -1,0 +1,31 @@
+{% if admission_message %}
+    <p class="text-decoration-none text-danger mt-5">Here are some  admission notices from </p>
+            {% for post in admission_message %}
+            <div class ="card shadow">
+                <div class="card-body">
+                    <p>
+                        Name :{{post.name}}
+
+                    </p>
+                    <p>
+                        Course :{{post.course}}
+                        
+                    </p>
+                    <p>
+                        Contact number {{ post.contact_number }}
+                        
+                    </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="float-end">
+
+                        </div>
+                    </div>
+                        
+                        
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+{% endif %}

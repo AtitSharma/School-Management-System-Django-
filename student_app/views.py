@@ -3,19 +3,24 @@ from student_app.forms import (UserRegistationForm
                                ,StudentCreationForm,
                                TeacherCreationForm,
                                CourseCreationForm,
-                               SemisterCreationForm,AdminRegistationForm,StudentRegistationForm,
-                               SubjectCreationForm,PostCreationForm,AdmissionForm,MessageForm,StudentLoginForm,AdminLoginForm,
+                               SemisterCreationForm,
+                               SubjectCreationForm,PostCreationForm,AdmissionForm,MessageForm,StudentLoginForm,
                                )
+
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponseRedirect
 from student_app.models import Student,Teacher,User,Subject,Semister,School,Course,Post,AdmissionMessage,Message
 from django.views.generic import UpdateView,DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+
+
+
+
 
 def home(request):
     return render(request,"student_app/home.html")
@@ -32,20 +37,31 @@ def student_home(request):
     }
     return render(request,"student_app/student_home.html",context)
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def admin_home(request):
     courses=Course.objects.all()
     teacher=Teacher.objects.all()
     student=Student.objects.all()
     posts=Post.objects.all()
+    complaints=Message.objects.all()
+    subjects=Subject.objects.all()
+    semisters=Semister.objects.all()
+    admission_message=AdmissionMessage.objects.all()
+
+
     context={
         "courses":courses,
         "teachers":teacher,
         "students":student,
         "posts":posts,
+        "complaints":complaints,
+        "admisssion_message":admission_message,
+        "subjects":subjects,
+        "semisters":semisters
 
         }
     return render(request,"student_app/admin_home.html",context)
+
 
 class Login(LoginView):
     template_name="student_app/login.html"
@@ -57,19 +73,7 @@ def user_logout(request):
     return HttpResponseRedirect(reverse("student:home"))
     
 
-# def student_login(request):
-#     form=AuthenticationForm(request.POST or None)
-#     if request.method=="POST":
-#         username=request.POST.get("username")
-#         password=request.POST.get("password")
-#         user=authenticate(request,username=username,password=password)
-#         if user:
-#             login(request,user) 
-#             return HttpResponseRedirect(reverse("student:student_home"))
-#     return render(request,"student_app/student_login.html",{"form":form})
-
-
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def manage(request,title):
     courses=Course.objects.all()
     students=Student.objects.all()
@@ -91,68 +95,79 @@ def manage(request,title):
         return render(request,"student_app/manage.html",{"semisters":semisters,"title":title})
     elif title=="school":
         return render(request,"student_app/manage.html",{"schools":schools,"title":title})
-        
+    messages.success(request,f"Sucessfully edited {title}")
     return render(request,"student_app/manage.html")
 
 def register(request):
     form=UserRegistationForm(request.POST)
     if form.is_valid():
-        form.save()
+        form.save() 
         return redirect("student:home")
+    
     context={"form":form}
-    return render(request,"student_app/register.html",context)
+    return render(request,"student_app/student_register.html",context)
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def add_student(request):
     if request.method=="POST":
         form=StudentCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"Student added sucessfully")
             return redirect("student:manage",title="student")
     else:
         form=StudentCreationForm()
     return render(request,"student_app/add_student.html",{"form":form})
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def add_teacher(request):
+    teacher=request.POST.get("name")
+    print(teacher,"****************************************")
     if request.method=="POST":
         form=TeacherCreationForm(request.POST)
         
         if form.is_valid():
+            teacher=request.POST.get("name")
+            print(teacher)
+
             form.save()
+            messages.success(request,"sucessfully added")
             return redirect("student:manage",title="teacher")
     else:
         form=TeacherCreationForm()
     return render(request,"student_app/add_teacher.html",{"form":form})
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def add_course(request):
     if request.method=="POST":
         form=CourseCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"sucessfully added")
             return redirect("student:manage",title="course")
     else:
         form=CourseCreationForm()
     return render(request,"student_app/add_course.html",{"form":form})
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def add_subject(request):
     if request.method=="POST":
         form=SubjectCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"sucessfully added")
             return redirect("student:manage",title="subject")
     else:
         form=SubjectCreationForm()
     return render(request,"student_app/add_subject.html",{"form":form})
 
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def add_semister(request):
     if request.method=="POST":
         form=SemisterCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"sucessfully added")
             return redirect("student:manage",title="semister")
     else:
         form=SemisterCreationForm()
@@ -167,6 +182,7 @@ class EditCourse(LoginRequiredMixin,UpdateView):
 
     def get_object(self):
         pk = self.kwargs.get('pk')
+        messages.success(self.request,"sucessfully updated")
         return Course.objects.get(pk=pk)
     def get_context_data(self, **kwargs):
         pk = self.kwargs.get('pk')
@@ -177,12 +193,13 @@ class EditCourse(LoginRequiredMixin,UpdateView):
 
 class EditStudent(LoginRequiredMixin,UpdateView):
     model=Student
-    fields=["username","description","due_fees"]
+    fields=["name","description","due_fees"]
     template_name="student_app/edit_student.html"
     success_url=reverse_lazy("student:manage",args=["student"])
 
     def get_object(self):
         pk=self.kwargs.get("pk")
+        messages.success(self.request,"sucessfully updated")
         return Student.objects.get(pk=pk)
     
     def get_context_data(self, **kwargs) :
@@ -201,6 +218,7 @@ class EditSemister(LoginRequiredMixin,UpdateView):
 
     def get_object(self):
         pk=self.kwargs.get("pk")
+        messages.success(self.request,"sucessfully updated")
         return Semister.objects.get(pk=pk)
     
     def get_context_data(self,**kwargs):
@@ -218,6 +236,7 @@ class EditTeacher(LoginRequiredMixin,UpdateView):
 
     def get_object(self):
         pk=self.kwargs.get("pk")
+        messages.success(self.request,"sucessfully updated")
         return Teacher.objects.get(pk=pk)
     
     def get_context_data(self, **kwargs):
@@ -230,16 +249,18 @@ class EditTeacher(LoginRequiredMixin,UpdateView):
 
 class EditSubject(LoginRequiredMixin,UpdateView):
     model=Subject
-    fields=["username","description","marks"]
+    fields=["name","description","marks"]
     template_name="student_app/edit_subject.html"
     success_url=reverse_lazy("student:manage",args=["subject"])
 
     def get_object(self):
         pk=self.kwargs.get("pk")
+        messages.success(self.request,"sucessfully updated")
         return Subject.objects.get(pk=pk)
     
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
+        
         pk=self.kwargs.get("pk")
         context["pk"]=pk
         return context
@@ -280,7 +301,7 @@ class DeleteSemister(LoginRequiredMixin,DeleteView):
     def get_success_url(self):
         return reverse("student:manage",args=("semister",))
     
-@login_required
+@user_passes_test(lambda u:u.is_superuser)
 def create_post(request):
     if request.method=="POST":
         form=PostCreationForm(request.POST)
@@ -344,88 +365,46 @@ def contact_for_admission(request):
 
 
 
-class ProfileUpdateStudent(LoginRequiredMixin,UpdateView):
+class ProfileUpdateStudent(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model=User
-    fields=["username","description"]
+    fields=["username"]
     template_name="student_app/edit_studentprofile.html"
     success_url=reverse_lazy("student:student_home")
+    
 
     def form_valid(self, form):
         form.instance.name= self.request.user.username
+
         return super().form_valid(form)
     
+    def test_func(self):
+        post=self.get_object()
+        if self.request.user.username==post.username:
+            return True
+        return False
+
 
     def get_context_data(self, **kwargs) :
         context=super().get_context_data(**kwargs)
         pk=self.kwargs.get("pk")
         context['pk']=pk
+
+        # print(self.request.user)
         return context
 
+@user_passes_test(lambda u:u.is_superuser)
+def view_complaints(request):
+    complaints=Message.objects.all()
+    return render(request,"student_app/view_complaints.html",{"complaints":complaints})
 
-def admin_register(request):
-    if request.method=="POST":
-        form=AdminRegistationForm(request.POST)
-        if form.is_valid():
-            user=form.save()
-            user.refresh_from_db()
-            user.save()
-            raw_password=form.cleaned_data.get("password1")
-            user=authenticate(username=user.username,password=raw_password)
-            login(request,user)
-            return redirect("student:admin_home")
-    else:
-        form=AdminRegistationForm()
-    return render(request,"student_app/admin_register.html",{"form":form})
-
-
-def student_register(request):
-    if request.method=="POST":
-        form=StudentRegistationForm(request.POST)
-        if form.is_valid():
-            user=form.save()
-            user.refresh_from_db()
-            user.save()
-            raw_password=form.cleaned_data.get("password1")
-            user=authenticate(username=user.username,password=raw_password)
-            login(request,user)
-            return redirect("student:student_home")
-    else:
-        form=StudentRegistationForm()
-    return render(request,"student_app/student_register.html",{"form":form})
+@user_passes_test(lambda u:u.is_superuser)
+def view_admission(request):
+    admission_message=AdmissionMessage.objects.all()
+    return render(request,"student_app/view_admission.html",{"admission_message":admission_message})
 
 
 
-def admin_login(request):
-    if request.method=="POST":
-        form=AdminLoginForm(request.POST)
-        if form.is_valid():
-            username=request.POST.get("username")
-            password=request.POST.get("password")
-            user=authenticate(username=username,password=password)
-            if user:
-                login(request,user)
-                return redirect("student:admin_home")
-    else:
-        form=AdminLoginForm()
-    return render(request,"student_app/admin_login.html",{"form":form})
-            
-            
 
-
-
-def student_login(request):
-    if request.method=="POST":
-        form=StudentLoginForm(request.POST)
-        if form.is_valid():
-            username=request.POST.get("username")
-            password=request.POST.get("password")
-            user=authenticate(username=username,password=password)
-            if user:
-                login(request,user)
-                return redirect("studnet:stundent_home")
-    else:
-        form=StudentLoginForm()
-    return render(request,"student_app/student_login.html",{"form":form})
 
 
 

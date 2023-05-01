@@ -2,7 +2,14 @@
 {% block content %}
 hello this is manage
 
-<br>
+
+{% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+  {% endfor %}
+{% endif %}
 {% if title == "student" %}
 add {{ title }} <a href="{% url 'student:add_stundent' %}">Add</a>
 {% elif title == "teacher" %}
@@ -25,6 +32,7 @@ add {{ title }} <a href="{% url 'student:add_subject' %}">Add</a>
     <br>
 {% endfor %}
 <br>
+
 {% for i in teachers %}
     {{i}} <a href="{% url 'student:edit_teacher' i.id %}">Manage</a>
     <br>
@@ -41,6 +49,8 @@ add {{ title }} <a href="{% url 'student:add_subject' %}">Add</a>
     <br>
 {% endfor %}
 <br>
+
+
 
 
 {% endblock content %}

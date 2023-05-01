@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from student_app.models import (User
                                 ,Student,Teacher
                                 ,Semister,Subject
-                                ,Course,Post,AdmissionMessage,Message,Admin)
+                                ,Course,Post,AdmissionMessage,Message)
 
 class UserRegistationForm(UserCreationForm):
     class Meta:
@@ -13,12 +13,17 @@ class UserRegistationForm(UserCreationForm):
 class StudentCreationForm(forms.ModelForm):
     class Meta:
         model=Student
-        fields=["name","description","due_fees"]
+        fields=["name","description","due_fees","user"]
+        
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs["class"]="form-control"
 
 class TeacherCreationForm(forms.ModelForm):
     class Meta:
         model=Teacher
-        fields=["name","description","subject","due_salary"]
+        fields=["name","description","subject","due_salary","user"]
 
 
 class CourseCreationForm(forms.ModelForm):
@@ -40,7 +45,7 @@ class SubjectCreationForm(forms.ModelForm):
 class PostCreationForm(forms.ModelForm):
     class Meta:
         model=Post
-        fields=["title","description","user"]
+        fields=["title","description"]
 
 
 class MessageForm(forms.ModelForm):
@@ -65,22 +70,24 @@ class StudentProfileManagementForm(forms.ModelForm):
 class StudentRegistationForm(UserCreationForm):
     class Meta:
         model=Student
-        fields=["username","password1","password2"]
+        fields=["name","password1","password2"]
 
-class AdminRegistationForm(UserCreationForm):
-    class Meta:
-        model=Admin
-        fields=["username","password1","password2"]
+
 
 
 class StudentLoginForm(AuthenticationForm):
     class Meta:
         model=Student
-        fields=["username","password1","password2"]
+        fields=["name","password1","password2"]
 
-class AdminLoginForm(AuthenticationForm):
-    class Meta:
-        model=Admin
-        fields=["username","password1","password2"]
+
+
+
+
+
+
+
+
+
 
 

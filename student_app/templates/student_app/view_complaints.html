@@ -1,0 +1,29 @@
+{% if complaints %}
+    <p class="text-decoration-none text-danger mt-5">Here are some  message from parents  </p>
+            {% for post in complaints %}
+            <div class ="card shadow">
+                <div class="card-body">
+                    <p>
+                        Title :{{post.title}}
+
+                    </p>
+                    {% comment %} <p>
+                        Description :{{post.description}}
+                        
+                    </p> {% endcomment %}
+                    </div>
+                    <div class="card-footer">
+                        <div class="float-end">
+                     <p>
+                        Description :{{post.description}}                      
+                    </p>
+                        </div>
+                    </div>
+                        
+                        
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+{% endif %}

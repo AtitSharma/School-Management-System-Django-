@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 Which register do yo want to keep
-<a href="{% url 'student:student_register' %}" > Student register </a>
+{% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+  {% endfor %}
+{% endif %}
+<a href="{% url 'student:register' %}" >Register </a>
 <br>
-<a href="{% url 'student:admin_register' %}" > Admin register </a>
+
 
 
 {% endblock content %}

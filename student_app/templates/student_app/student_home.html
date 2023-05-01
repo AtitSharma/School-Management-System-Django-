@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+{% if messages %}
+  {% for message in messages %}
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+  {% endfor %}
+{% endif %}
 <a href="{% url 'student:profile_update' request.user.id %}">Edit profile </a>
 {% if posts %}
     <p>Here are some notices from admin</p>

@@ -8,14 +8,15 @@
 
       <a class="nav-item nav-link active" href="{% url 'student:home' %}">Home <span class="sr-only">(current)</span></a>
       <a class="nav-item nav-link" href="{% url 'student:contact' %}">Contact</a>
-      <a class="nav-item nav-link" href="{% url 'student:register' %}">Need account? Register</a>
+
       {% if user.is_authenticated%} 
       <a class="nav-item nav-link" href="{% url 'student:logout' %}">LogOut</a>
       <a class="nav-item nav-link" href="{% url 'student:admin_home' %}">Admin Home</a>
       <a class="nav-item nav-link" href="{% url 'student:student_home' %}">Student Home</a>
       {% else %}
+      <a class="nav-item nav-link" href="{% url 'student:register' %}">Need account? Register</a>
       <a class="nav-item nav-link" href="{% url 'student:student_login' %}">Student Login</a>
-      <a class="nav-item nav-link" href="{% url 'student:admin_login' %}">Admin Login</a>
+
       
       {% endif %}
 
