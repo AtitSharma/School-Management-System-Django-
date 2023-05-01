@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api_management',
     'drf_yasg',
+    'embed_video',
 ]
 
 MIDDLEWARE = [

@@ -1,9 +1,9 @@
 
 from django.urls import path,include
-from student_app.views import (home,
+from student_app.views import (home,play_video,
                                register,student_home,
                                admin_home,view_admission,view_complaints
-                               ,manage,add_student,Login,
+                               ,add_student,Login,
                                add_teacher,contact,contact_for_admission,contact_for_message,
                                add_course,add_subject,add_semister,user_logout
                                ,EditCourse,create_post,EditPost,DeletePost,
@@ -29,7 +29,6 @@ urlpatterns = [
     path("student-home/",student_home,name="student_home"),
     path("admin-home/",admin_home,name="admin_home"),
     path("student-login/",Login.as_view(),name="student_login"),
-    path("manage/<str:title>/",manage,name="manage"),
     path("add-student/",add_student,name="add_stundent"),
     path("add-teacher/",add_teacher,name="add_teacher"),
     path("add-course/",add_course,name="add_course"),
@@ -51,6 +50,7 @@ urlpatterns = [
     path("edit-profile/<int:pk>",ProfileUpdateStudent.as_view(),name="profile_update"),
     path("view-admission/",view_admission,name="view_admission"),
     path("view-complaints/",view_complaints,name="view_complaints"),
+    path("play-video",play_video,name="play")
 
 
 

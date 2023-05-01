@@ -10,35 +10,21 @@ This is Admin homepage
       </div>
   {% endfor %}
 {% endif %}
-<br>
-<a href="{% url 'student:manage' title='course' %}">Manage Courses </a>
-<br>
-<a href="{% url 'student:manage' title='student' %}">Manage Students </a>
-<br>
-<a href="{% url 'student:manage' title='teacher' %}" >Manage Teachers</a>
-<br>
-<a href="{% url 'student:manage' title='subject' %}" >Manage Subjects</a>
-<br>
-<a href="{% url 'student:manage' title='semister' %}" >Manage Semister</a>
-<br>
-<a href="{% url 'student:create_post' %}" >Provide notice to all student </a>
-<br>
-<a href="{% url 'student:view_complaints' %}" >Complaints </a>
-<br>
-<a href="{% url 'student:view_admission' %}" >Admission Notice </a>
-<br>
+
 <div class="accordion accordion-flush" id="accordionFlushExample">
   <div class="accordion-item">
     <h2 class="accordion-header">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-        Manage Courses
+        Manage Courses 
       </button>
     </h2>
     <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
+      <a href="{% url 'student:add_course' %}" class="btn btn-secondary">Add+</a>
+      <br>
       {% if courses %}
       {% for course in courses%}
-         <a href="#">{{course}} </a>
+         <a href="{% url 'student:edit_course' course.id %}">{{course}} </a>
         <br>
       {% endfor %}
       {% endif %}
@@ -54,9 +40,11 @@ This is Admin homepage
     </h2>
     <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
+      <a href="{% url 'student:add_stundent' %}" class="btn btn-secondary">Add+</a>
+      <br>
       {% if students %}
       {% for student in students %}
-         <a href="#">{{student}} </a>
+         <a href="{% url 'student:edit_student' student.id %}">{{student}} </a>
         <br>
       {% endfor %}
       {% endif %}
@@ -73,9 +61,11 @@ This is Admin homepage
     </h2>
     <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
+      <a href="{% url 'student:add_teacher' %}" class="btn btn-secondary">Add+</a>
+      <br>
     {% if teachers %}
       {% for teacher in teachers %}
-         <a href="#">{{teacher}} </a>
+         <a href="{% url 'student:edit_teacher' teacher.id %}">{{teacher}} </a>
         <br>
       {% endfor %}
       {% endif %}  
@@ -93,9 +83,11 @@ This is Admin homepage
     </h2>
     <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
+      <a href="{% url 'student:add_subject' %}" class="btn btn-secondary">Add+</a>
+      <br>
     {% if subjects %}
       {% for subject in subjects %}
-         <a href="#">{{subject}} </a>
+         <a href="{% url 'student:edit_subject' subject.id %}">{{subject}} </a>
         <br>
       {% endfor %}
       {% endif %}
@@ -113,10 +105,12 @@ This is Admin homepage
       </button>
     </h2>
     <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">      
+      <div class="accordion-body">   
+      <a href="{% url 'student:add_semister' %}" class="btn btn-secondary">Add+</a>
+      <br>   
       {% if semisters %}
       {% for sem in semisters %}
-         <a href="#">{{sem}} </a>
+         <a href="{% url 'student:edit_semister' sem.id %}">{{sem}} </a>
         <br>
       {% endfor %}
       {% endif %}</div>
@@ -129,7 +123,9 @@ This is Admin homepage
       </button>
     </h2>
     <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for providing notice to all students.</div>
+      <div class="accordion-body">
+      <a href="{% url 'student:create_post' %}" class="btn btn-secondary">Add+</a>
+      </div>
     </div>
   </div>
 
@@ -140,7 +136,9 @@ This is Admin homepage
     </button>
     </h2>
     <div id="flush-collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for managing semesters.</div>
+      <div class="accordion-body">
+    <a href="{% url 'student:view_complaints' %}" class="btn btn-secondary">View</a>
+      </div>
     </div>
   </div>
 
@@ -151,7 +149,9 @@ This is Admin homepage
     </button>
     </h2>
     <div id="flush-collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Placeholder content for managing semesters.</div>
+      <div class="accordion-body">
+        <a href="{% url 'student:view_admission' %}" class="btn btn-secondary">View Notices</a>
+      </div>
     </div>
   </div>
 

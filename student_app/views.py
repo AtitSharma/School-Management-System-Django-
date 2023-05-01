@@ -8,7 +8,7 @@ from student_app.forms import (UserRegistationForm
                                )
 
 from django.contrib.auth.views import LoginView
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from student_app.models import Student,Teacher,User,Subject,Semister,School,Course,Post,AdmissionMessage,Message
 from django.views.generic import UpdateView,DeleteView
@@ -73,31 +73,6 @@ def user_logout(request):
     return HttpResponseRedirect(reverse("student:home"))
     
 
-@user_passes_test(lambda u:u.is_superuser)
-def manage(request,title):
-    courses=Course.objects.all()
-    students=Student.objects.all()
-    teachers=Teacher.objects.all()
-    subjects=Subject.objects.all()
-    semisters=Semister.objects.all()
-    schools=School.objects.all()
-
-
-    if title=="course":
-        return render(request,"student_app/manage.html",{"courses":courses,"title":title})
-    elif title=="student":
-        return render(request,"student_app/manage.html",{"students":students,"title":title})
-    elif title=="teacher":
-        return render(request,"student_app/manage.html",{"teachers":teachers,"title":title})
-    elif title=="subject":
-        return render(request,"student_app/manage.html",{"subjects":subjects,"title":title})
-    elif title=="semister":
-        return render(request,"student_app/manage.html",{"semisters":semisters,"title":title})
-    elif title=="school":
-        return render(request,"student_app/manage.html",{"schools":schools,"title":title})
-    messages.success(request,f"Sucessfully edited {title}")
-    return render(request,"student_app/manage.html")
-
 def register(request):
     form=UserRegistationForm(request.POST)
     if form.is_valid():
@@ -112,27 +87,28 @@ def add_student(request):
     if request.method=="POST":
         form=StudentCreationForm(request.POST)
         if form.is_valid():
+            pk=int(request.POST.get("user"))
             form.save()
+            User.objects.filter(pk=pk).update(status="student")
             messages.success(request,"Student added sucessfully")
-            return redirect("student:manage",title="student")
+            return redirect("student:admin_home")
     else:
         form=StudentCreationForm()
     return render(request,"student_app/add_student.html",{"form":form})
 
 @user_passes_test(lambda u:u.is_superuser)
 def add_teacher(request):
-    teacher=request.POST.get("name")
-    print(teacher,"****************************************")
     if request.method=="POST":
         form=TeacherCreationForm(request.POST)
-        
         if form.is_valid():
             teacher=request.POST.get("name")
-            print(teacher)
-
+            pk=int(request.POST.get("user"))
+            print(pk)
             form.save()
+            User.objects.filter(pk=pk).update(status="teacher")
             messages.success(request,"sucessfully added")
-            return redirect("student:manage",title="teacher")
+            return redirect("student:admin_home")
+        
     else:
         form=TeacherCreationForm()
     return render(request,"student_app/add_teacher.html",{"form":form})
@@ -144,7 +120,7 @@ def add_course(request):
         if form.is_valid():
             form.save()
             messages.success(request,"sucessfully added")
-            return redirect("student:manage",title="course")
+            return redirect("student:admin_home")
     else:
         form=CourseCreationForm()
     return render(request,"student_app/add_course.html",{"form":form})
@@ -156,7 +132,7 @@ def add_subject(request):
         if form.is_valid():
             form.save()
             messages.success(request,"sucessfully added")
-            return redirect("student:manage",title="subject")
+            return redirect("student:admin_home")
     else:
         form=SubjectCreationForm()
     return render(request,"student_app/add_subject.html",{"form":form})
@@ -168,7 +144,7 @@ def add_semister(request):
         if form.is_valid():
             form.save()
             messages.success(request,"sucessfully added")
-            return redirect("student:manage",title="semister")
+            return redirect("student:admin_home")
     else:
         form=SemisterCreationForm()
     return render(request,"student_app/add_semister.html",{"form":form})
@@ -178,7 +154,7 @@ class EditCourse(LoginRequiredMixin,UpdateView):
     model=Course
     fields=["name","description","teacher","student","semister"]
     template_name="student_app/edit_course.html"
-    success_url=reverse_lazy("student:manage",args=["course"])
+    success_url=reverse_lazy("student:admin_home")
 
     def get_object(self):
         pk = self.kwargs.get('pk')
@@ -195,7 +171,7 @@ class EditStudent(LoginRequiredMixin,UpdateView):
     model=Student
     fields=["name","description","due_fees"]
     template_name="student_app/edit_student.html"
-    success_url=reverse_lazy("student:manage",args=["student"])
+    success_url=reverse_lazy("student:admin_home")
 
     def get_object(self):
         pk=self.kwargs.get("pk")
@@ -214,7 +190,7 @@ class EditSemister(LoginRequiredMixin,UpdateView):
     model=Semister
     fields=["name","description","teacher","student","subject"]
     template_name="student_app/edit_semister.html"
-    success_url=reverse_lazy("student:manage",args=["semister"])
+    success_url=reverse_lazy("student:admin_home")
 
     def get_object(self):
         pk=self.kwargs.get("pk")
@@ -232,7 +208,7 @@ class EditTeacher(LoginRequiredMixin,UpdateView):
     model=Teacher
     fields=["name","description","due_salary","subject"]
     template_name="student_app/edit_teacher.html"
-    success_url=reverse_lazy("student:manage",args=["teacher"])
+    success_url=reverse_lazy("student:admin_home")
 
     def get_object(self):
         pk=self.kwargs.get("pk")
@@ -251,7 +227,7 @@ class EditSubject(LoginRequiredMixin,UpdateView):
     model=Subject
     fields=["name","description","marks"]
     template_name="student_app/edit_subject.html"
-    success_url=reverse_lazy("student:manage",args=["subject"])
+    success_url=reverse_lazy("student:admin_home")
 
     def get_object(self):
         pk=self.kwargs.get("pk")
@@ -271,35 +247,35 @@ class DeleteStudent(LoginRequiredMixin,DeleteView):
     template_name="student_app/delete_student.html"
 
     def get_success_url(self):
-        return reverse("student:manage",args=("student",))
+        return reverse("student:admin_home")
     
 class DeleteTeacher(LoginRequiredMixin,DeleteView):
     model=Teacher
     template_name="student_app/delete_teacher.html"
 
     def get_success_url(self):
-        return reverse("student:manage",args=("teacher",))
+        return reverse("student:admin_home")
 
 class DeleteCourse(LoginRequiredMixin,DeleteView):
     model=Course
     template_name="student_app/delete_course.html"
 
     def get_success_url(self):
-        return reverse("student:manage",args=("course",))
+        return reverse("student:admin_home")
     
 class DeleteSubject(LoginRequiredMixin,DeleteView):
     model=Subject
     template_name="student_app/delete_subject.html"
 
     def get_success_url(self):
-        return reverse("student:manage",args=("subject",))
+        return reverse("student:admin_home")
     
 class DeleteSemister(LoginRequiredMixin,DeleteView):
     model=Semister
-    template_name="student_app/delete_semister.html"
+    template_name="student_app/delete-semister.html"
 
     def get_success_url(self):
-        return reverse("student:manage",args=("semister",))
+        return reverse("student:admin_home")
     
 @user_passes_test(lambda u:u.is_superuser)
 def create_post(request):
@@ -405,6 +381,16 @@ def view_admission(request):
 
 
 
+from embed_video.backends import detect_backend
+
+def play_video(request):
+    video_url = "https://www.youtube.com/watch?v=KZNDqHI8AW4&list=RDKZNDqHI8AW4&start_radio=1"
+    backend = detect_backend(video_url)
+    context = {
+        'video_url': video_url,
+        'backend': backend,
+    }
+    return render(request, 'student_app/video_player.html', context)
 
 
 

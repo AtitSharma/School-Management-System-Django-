@@ -99,9 +99,9 @@ class Message(models.Model):
     
 
 class AdmissionMessage(BaseModel):
-    name=models.CharField(max_length=250,blank=True,null=True)
+    name=models.CharField(max_length=250)
     course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="admission_message")
-    contact_number=models.IntegerField()
+    contact_number=models.CharField(max_length=100)
 
 
     def __str__(self):

@@ -3,33 +3,9 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_table }}
+    {{ form.as_p }}
     <button type="submit">Save</button>
 </form>
-The students enorolling in this class are 
-<br>
-{% if semisters  %}
-    {% for i in semisters %}
-        {{i.student}} <a href="{% url 'student:manage' title='student' %}" >Manage studnet details </a>
-        <br>
-    {% endfor %}
-    <br>
-    The teacher enrolling in this class are
-    <br>
-    {% for i in semisters %}
-        {{i.teacher }} <a href="{% url 'student:manage' title='teacher' %}" >Manage Teachers detail </a>
-        <br>
-    {% endfor %}
-    <br>
-    The Subjects taught in this class are
-    <br>
-    {% for i in semisters %}
-        {{i.subject }} <a href="{% url 'student:manage' title='subject' %}" >Manage Class Subjects </a>
-        <br>
-    {% endfor %}
-    <br>
-{% endif %}
-<a href="{% url 'student:delete_student' pk=pk %}"> Resticate  particular semister</a>
-
+<a href="{% url 'student:delete_semister' pk=pk %}">Delete Semister</a>
 
 {% endblock content %}
