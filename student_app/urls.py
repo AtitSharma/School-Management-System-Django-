@@ -1,6 +1,6 @@
 
 from django.urls import path,include
-from student_app.views import (home,play_video,
+from student_app.views import (home,send_mails_to_all,
                                register,student_home,
                                admin_home,view_admission,view_complaints
                                ,add_student,Login,
@@ -50,7 +50,7 @@ urlpatterns = [
     path("edit-profile/<int:pk>",ProfileUpdateStudent.as_view(),name="profile_update"),
     path("view-admission/",view_admission,name="view_admission"),
     path("view-complaints/",view_complaints,name="view_complaints"),
-    path("play-video",play_video,name="play")
+    # path("send-mail/",send_mails_to_all,name="send")
 
 
 

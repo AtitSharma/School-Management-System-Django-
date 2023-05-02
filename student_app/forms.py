@@ -8,7 +8,7 @@ from student_app.models import (User
 class UserRegistationForm(UserCreationForm):
     class Meta:
         model=User
-        fields=["username","password1","password2"]
+        fields=["username","email","password1","password2"]
 
 class StudentCreationForm(forms.ModelForm):
     class Meta:

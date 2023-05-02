@@ -6,7 +6,6 @@ from student_app.forms import (UserRegistationForm
                                SemisterCreationForm,
                                SubjectCreationForm,PostCreationForm,AdmissionForm,MessageForm,StudentLoginForm,
                                )
-
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
@@ -17,13 +16,30 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from embed_video.backends import detect_backend
+from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.contrib.auth import get_user_model
+from student_home import settings
+from celery import shared_task
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+
+
+# from student_app.tasks import send_mail_func
 
 
 
 
 
 def home(request):
-    return render(request,"student_app/home.html")
+    video_url = "https://www.youtube.com/watch?v=KZNDqHI8AW4&list=RDKZNDqHI8AW4&start_radio=1"
+    backend = detect_backend(video_url)
+    context = {
+        'video_url': video_url,
+        'backend': backend,
+    }
+    return render(request,"student_app/home.html",context)
 
 
 @login_required
@@ -283,6 +299,10 @@ def create_post(request):
         form=PostCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            print("***************************************************************************************")
+            mail_subject=request.POST.get("title")
+            message=request.POST.get("description")
+            send_mails_to_all(request,mail_subject,message)
             return redirect("student:admin_home")
     else:
         form=PostCreationForm()
@@ -381,16 +401,29 @@ def view_admission(request):
 
 
 
-from embed_video.backends import detect_backend
+@shared_task
+def send_mails_to_all(request,mail_subject,message):   
+    users=get_user_model().objects.all()
+    mes=message
+    for user in users:
+        to_email=user.email
+        message = render_to_string("student_app/show_in_all.html", {
+        'title':mes,
+        'domain': get_current_site(request).domain,
+        "protocol": 'https' if request.is_secure() else 'http'
+        })
+        send_mail(
+            subject=mail_subject,
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[to_email],
+            fail_silently=True,
+        )
+    return HttpResponse("SENT")
+    
 
-def play_video(request):
-    video_url = "https://www.youtube.com/watch?v=KZNDqHI8AW4&list=RDKZNDqHI8AW4&start_radio=1"
-    backend = detect_backend(video_url)
-    context = {
-        'video_url': video_url,
-        'backend': backend,
-    }
-    return render(request, 'student_app/video_player.html', context)
+
+
 
 
 
