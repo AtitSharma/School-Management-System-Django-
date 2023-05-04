@@ -13,6 +13,10 @@
       <a class="nav-item nav-link" href="{% url 'student:logout' %}">LogOut</a>
       <a class="nav-item nav-link" href="{% url 'student:admin_home' %}">Admin Home</a>
       <a class="nav-item nav-link" href="{% url 'student:student_home' %}">Student Home</a>
+      <form class="d-flex" role="search" method="get" action="/search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" id="query" >
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
       {% else %}
       <a class="nav-item nav-link" href="{% url 'student:register' %}">Need account? Register</a>
       <a class="nav-item nav-link" href="{% url 'student:student_login' %}">Student Login</a>

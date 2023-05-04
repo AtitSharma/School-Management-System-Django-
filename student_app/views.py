@@ -424,7 +424,18 @@ def send_mails_to_all(request,mail_subject,message):
 
 
 
+def search(request):
+    query=request.GET['query']
+    # std1=Student.objects.filter(name__icontains=query)
+    # std2=Student.objects.filter(description__icontains=query)
+    # students=std1.union(std2)
+    students=Student.objects.filter(name__icontains=query)| Student.objects.filter(description__icontains=query)
+    context={
+       "students":students,
+        
+    }
 
+    return render(request,"student_app/search.html",context)
 
 
 
