@@ -29,7 +29,10 @@ from django.contrib.sites.shortcuts import get_current_site
 # from student_app.tasks import send_mail_func
 
 
-
+class SuperUserRequiredMixins(LoginRequiredMixin,UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
+        
 
 
 def home(request):
@@ -258,40 +261,38 @@ class EditSubject(LoginRequiredMixin,UpdateView):
         return context
 
 
-class DeleteStudent(LoginRequiredMixin,DeleteView):
-    model=Student
-    template_name="student_app/delete_student.html"
+@user_passes_test(lambda u:u.is_superuser)
+def delete_student(request,pk):
+    student=Student.objects.get(pk=pk)
+    student.delete()
+    return redirect("student:admin_home")
+   
+@user_passes_test(lambda u:u.is_superuser) 
+def delete_teacher(request,pk):
+    teacher=Teacher.objects.get(pk=pk)
+    teacher.delete()
+    return redirect("student:admin_home")
 
-    def get_success_url(self):
-        return reverse("student:admin_home")
-    
-class DeleteTeacher(LoginRequiredMixin,DeleteView):
-    model=Teacher
-    template_name="student_app/delete_teacher.html"
+@user_passes_test(lambda u:u.is_superuser)
+def delete_course(request,pk):
+    course=Course.objects.get(pk=pk)
+    course.delete()
+    return redirect("student:admin_home")
+   
+@user_passes_test(lambda u:u.is_superuser) 
+def delete_subject(request,pk):
+    subject=Subject.objects.get(pk=pk)
+    subject.delete()
+    return redirect("student:admin_home")
+ 
+@user_passes_test(lambda u:u.is_superuser)   
+def delete_semister(request,pk):
+    semister=Semister.objects.get(pk=pk)
+    semister.delete()
+    messages.add_message(request,messages.INFO,"Deleted sucessfully")
+    return redirect("student:admin_home")
 
-    def get_success_url(self):
-        return reverse("student:admin_home")
 
-class DeleteCourse(LoginRequiredMixin,DeleteView):
-    model=Course
-    template_name="student_app/delete_course.html"
-
-    def get_success_url(self):
-        return reverse("student:admin_home")
-    
-class DeleteSubject(LoginRequiredMixin,DeleteView):
-    model=Subject
-    template_name="student_app/delete_subject.html"
-
-    def get_success_url(self):
-        return reverse("student:admin_home")
-    
-class DeleteSemister(LoginRequiredMixin,DeleteView):
-    model=Semister
-    template_name="student_app/delete-semister.html"
-
-    def get_success_url(self):
-        return reverse("student:admin_home")
     
 @user_passes_test(lambda u:u.is_superuser)
 def create_post(request):
@@ -309,7 +310,7 @@ def create_post(request):
     return render(request,"student_app/add_post.html",{"form":form})
 
 
-class EditPost(LoginRequiredMixin,UpdateView):
+class EditPost(SuperUserRequiredMixins,UpdateView):
     model=Post
     template_name="student_app/edit_post.html"
     fields=["title","description"]
@@ -326,11 +327,11 @@ class EditPost(LoginRequiredMixin,UpdateView):
         context["pk"]=pk
         return context
 
-class DeletePost(LoginRequiredMixin,DeleteView):
-    model=Post
-    template_name="student_app/delete_post.html"
-    def get_success_url(self):
-        return reverse("student:admin_home")
+@user_passes_test(lambda u:u.is_superuser)
+def delete_post(request,pk):
+    post=Post.objects.get(pk=pk)
+    post.delete()
+    return redirect("student:admin_home")
 
 
 
@@ -361,7 +362,7 @@ def contact_for_admission(request):
 
 
 
-class ProfileUpdateStudent(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
+class ProfileUpdateStudent(SuperUserRequiredMixins,UserPassesTestMixin,UpdateView):
     model=User
     fields=["username"]
     template_name="student_app/edit_studentprofile.html"

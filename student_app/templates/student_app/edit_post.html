@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 <form method="post">
@@ -7,8 +8,21 @@
     <button type="submit">Save</button>
 </form>
 <br>
-<a href="{% url 'student:delete_post' pk=pk %}" class="btn btn-danger"> Delete Post </a>
-
-
-
+{% comment %} <a href="{% url 'student:delete_post' pk=pk %}" class="btn btn-danger"> Delete Post </a> {% endcomment %}
+<a  id="delete" onclick="clicked()" class="btn btn-danger"> Delete Post </a>
 {% endblock content %}
+{% block script %}
+<script>
+    <script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        function clicked(){
+            event.preventDefault();
+            if(confirm("Are You sure you want to delete the post ")){
+                window.location.href = "{% url 'student:delete_post' pk=pk %}"
+            }
+        }
+</script>
+{% endblock script %}
+
+
+

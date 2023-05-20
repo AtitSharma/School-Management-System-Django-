@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-<form method="POST">
-    {% csrf_token %}
-    <input type="submit" value="Yes, Delete" class="btn btn-danger">
-    <a href="#" class="btn btn-secondary">Cancel</a>
-</form>
-
-{% endblock content %}

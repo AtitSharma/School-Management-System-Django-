@@ -40,6 +40,7 @@ class SubjectViewSet(ModelViewSet):
 class CourseViewSet(ModelViewSet):
     serializer_class=CourseSerializer
     queryset=Course.objects.all()
+    
 
 
 def serializer1(request):
